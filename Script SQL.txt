@@ -1,0 +1,37 @@
+user: sa
+pass: admin123
+server: localhost
+
+Driver OBDC version 17.
+
+nombre DB: DB_CLIENTES
+
+Tabla clientes
+
+
+CREATE TABLE clientes (
+    id INT PRIMARY KEY IDENTITY(1,1),    -- ID único para cada cliente, autoincrementable
+    rut NVARCHAR(12) NOT NULL,		 -- rut clientes
+    nombre NVARCHAR(100) NOT NULL,       -- Nombre del cliente
+    apellido NVARCHAR(100) NOT NULL,     -- Apellido del cliente
+    region NVARCHAR(100) NOT NULL,       -- Región del cliente
+    cantidad_compras INT NOT NULL        -- Cantidad de compras realizadas por el cliente
+);
+
+INSERT INTO clientes (rut, nombre, apellido, region, cantidad_compras)
+VALUES
+('12345678-9', 'Juan', 'Pérez', 'Santiago', 10),
+('23456789-0', 'Ana', 'Gómez', 'Valparaíso', 5),
+('34567890-1', 'Luis', 'Martínez', 'Santiago', 20),
+('45678901-2', 'Marta', 'López', 'Antofagasta', 15),
+('56789012-3', 'Carlos', 'Rodríguez', 'Concepción', 25),
+('67890123-4', 'Patricia', 'Sánchez', 'Santiago', 30),
+('78901234-5', 'Pedro', 'Fernández', 'Santiago', 8),
+('89012345-6', 'Elena', 'García', 'Temuco', 12),
+('90123456-7', 'Jorge', 'Hernández', 'La Serena', 18),
+('01234567-8', 'Sandra', 'Paredes', 'Santiago', 22),
+('12345098-7', 'Martín', 'Ramírez', 'Valparaíso', 9),
+('23456109-8', 'Gabriela', 'Ruiz', 'Arica', 14),
+('34567210-9', 'Ricardo', 'Jiménez', 'Iquique', 17),
+('45678321-0', 'Cristina', 'Morales', 'Rancagua', 11),
+('56789432-1', 'Raúl', 'Vásquez', 'Santiago', 19);

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; }
+        .container { max-width: 600px; }
+        .response-box { margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">API de Clientes FERREMAS</h1>
+        
+        <div class="mb-3">
+            <input type="text" id="clienteId" class="form-control" placeholder="ID Cliente">
+            <input type="text" id="clienteRut" class="form-control mt-2" placeholder="Rut Cliente">
+            <input type="text" id="clienteNombre" class="form-control mt-2" placeholder="Nombre Cliente">
+            <input type="text" id="clienteApellido" class="form-control mt-2" placeholder="Apellido Cliente">
+            <input type="text" id="clienteRegion" class="form-control mt-2" placeholder="Región Cliente">
+            <input type="number" id="clienteCantidadCompras" class="form-control mt-2" placeholder="Cantidad Compras Cliente">
+        </div>
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" onclick="getClientes()">GET Clientes</button>
+            <button class="btn btn-success" onclick="postCliente()">POST Cliente</button>
+            <button class="btn btn-warning" onclick="putCliente()">PUT Cliente</button>
+            <button class="btn btn-danger" onclick="deleteCliente()">DELETE Cliente</button>
+        </div>
+
+        <div class="alert alert-info mt-3 response-box" id="responseMessage"></div>
+    </div>
+
+    <script>
+        const apiUrl = "http://localhost:5000/clientes";
+
+        async function getClientes() {
+            const id = document.getElementById("clienteId").value;
+            let url = apiUrl;  // Por defecto obtiene todos los clientes
+
+            if (id) {
+                url = `${apiUrl}/${id}`;  // Si hay ID, obtiene el cliente por ese ID
+            }
+
+            try {
+                const response = await fetch(url);
+                
+                // Verificar si la respuesta es válida
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener la respuesta.');
+                }
+                
+                const data = await response.json();
+                
+                // Verificar si la respuesta tiene un mensaje de error
+                if (data.mensaje) {
+                    document.getElementById("responseMessage").innerText = data.mensaje;
+                } else {
+                    document.getElementById("responseMessage").innerText = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        async function postCliente() {
+            const rut = document.getElementById("clienteRut").value;
+            const nombre = document.getElementById("clienteNombre").value;
+            const apellido = document.getElementById("clienteApellido").value;
+            const region = document.getElementById("clienteRegion").value;
+            const cantidadCompras = document.getElementById("clienteCantidadCompras").value;
+
+            if (!nombre || !apellido || !rut || !region || !cantidadCompras) {
+                return alert("Debes ingresar todos los campos.");
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        rut,
+                        nombre, 
+                        apellido, 
+                        region, 
+                        cantidad_compras: cantidadCompras })
+                });
+                const data = await response.json();
+                document.getElementById("responseMessage").innerText = JSON.stringify(data);
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = "Error creando cliente.";
+            }
+        }
+
+        async function putCliente() {
+            const id = document.getElementById("clienteId").value;
+            const nombre = document.getElementById("clienteNombre").value;
+            const apellido = document.getElementById("clienteApellido").value;
+            const rut = document.getElementById("clienteRut").value;
+            const region = document.getElementById("clienteRegion").value;
+            const cantidadCompras = document.getElementById("clienteCantidadCompras").value;
+
+            if (!id || !nombre || !apellido || !rut || !region || !cantidadCompras) {
+                return alert("Debes ingresar todos los campos.");
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        rut,
+                        nombre, 
+                        apellido,
+                        region, 
+                        cantidad_compras: cantidadCompras })
+                });
+                const data = await response.json();
+                document.getElementById("responseMessage").innerText = JSON.stringify(data);
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = "Error actualizando cliente.";
+            }
+        }
+
+        async function deleteCliente() {
+            const id = document.getElementById("clienteId").value;
+            if (!id) return alert("Debes ingresar un ID.");
+
+            try {
+                const response = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+                const data = await response.json();
+                document.getElementById("responseMessage").innerText = JSON.stringify(data);
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = "Error eliminando cliente.";
+            }
+        }
+    </script>
+</body>
+</html>
